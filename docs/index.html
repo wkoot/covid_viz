@@ -22,27 +22,43 @@
 
     var geoLayerPct = L.layerGroup().addTo(map);  // default activated
     var geoLayerAbs = L.layerGroup();
+    var geoLayerNew = L.layerGroup();
+    var geoLayerDens = L.layerGroup();
 
     var layerControl = {
         "Percentage": geoLayerPct,
-        "Absoluut": geoLayerAbs
+        "Absoluut": geoLayerAbs,
+        "Nieuw": geoLayerNew,
+        "Dichtheid": geoLayerDens
     };
     L.control.layers(layerControl, {}).addTo(map);
 
     function onEachFeaturePct(feature, layer) {
-        var gemeente_obj = covid_data.find(item => item.GemeentecodeGM === feature.properties.Code);
-        onEachFeatureBase(feature, layer, gemeente_obj);
-        layer.setStyle({"fillColor": getPctColorValue(gemeente_obj)});
+        var gemeente_obj = covid_data[feature.properties.Code.toString()];
+        onEachFeatureBase(feature, layer, gemeente_obj, feature.properties);
+        layer.setStyle(getPctColorStyle(gemeente_obj, feature.properties));
     }
 
     function onEachFeatureAbs(feature, layer) {
-        var gemeente_obj = covid_data.find(item => item.GemeentecodeGM === feature.properties.Code);
-        onEachFeatureBase(feature, layer, gemeente_obj);
-        layer.setStyle({"fillColor": getAbsColorValue(gemeente_obj)});
+        var gemeente_obj = covid_data[feature.properties.Code.toString()];
+        onEachFeatureBase(feature, layer, gemeente_obj, feature.properties);
+        layer.setStyle(getAbsColorStyle(gemeente_obj));
+    }
+
+    function onEachFeatureNew(feature, layer) {
+        var gemeente_obj = covid_data[feature.properties.Code.toString()];
+        onEachFeatureBase(feature, layer, gemeente_obj, feature.properties);
+        layer.setStyle(getNewColorStyle(gemeente_obj));
+    }
+
+    function onEachFeatureDens(feature, layer) {
+        var gemeente_obj = covid_data[feature.properties.Code.toString()];
+        onEachFeatureBase(feature, layer, gemeente_obj, feature.properties);
+        layer.setStyle(getDensColorStyle(gemeente_obj, feature.properties));
     }
 
     const xhr_covid_data = new XMLHttpRequest();
-    xhr_covid_data.open('GET', 'data/covid_13_03.json');
+    xhr_covid_data.open('GET', 'data/today.json');
     xhr_covid_data.setRequestHeader('Content-Type', 'application/json');
     xhr_covid_data.responseType = 'json';
     xhr_covid_data.onload = function() {
@@ -59,6 +75,8 @@
         if (xhr_geolayers.status !== 200) return;
         L.geoJSON(xhr_geolayers.response, {style: lineStyle,onEachFeature: onEachFeaturePct}).addTo(geoLayerPct);
         L.geoJSON(xhr_geolayers.response, {style: lineStyle,onEachFeature: onEachFeatureAbs}).addTo(geoLayerAbs);
+        L.geoJSON(xhr_geolayers.response, {style: lineStyle,onEachFeature: onEachFeatureNew}).addTo(geoLayerNew);
+        L.geoJSON(xhr_geolayers.response, {style: lineStyle,onEachFeature: onEachFeatureDens}).addTo(geoLayerDens);
     };
     xhr_geolayers.send();
 

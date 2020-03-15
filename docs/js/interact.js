@@ -18,16 +18,17 @@ function highlightFeature(event) {
     layer.openTooltip();
 }
 
-function onEachFeatureBase(feature, layer, gemeente_obj) {
+function onEachFeatureBase(feature, layer, gemeente_obj, gemeente_props) {
 
     var details = "<dl>" +
         "<dt>" + feature.properties['Gemeentena'] + "</dt>" +
-        "<dd>08-03: " + gemeente_obj['COVID 08-03'] + "</dd>" +
-        "<dd>09-03: " + gemeente_obj['COVID 09-03'] + "</dd>" +
-        "<dd>10-03: " + gemeente_obj['COVID 10-03'] + "</dd>" +
-        "<dd>11-03: " + gemeente_obj['COVID 11-03'] + "</dd>" +
-        "<dd>12-03: " + gemeente_obj['COVID 12-03'] + "</dd>" +
-        "<dd>13-03: " + gemeente_obj['COVID 13-03'] + "</dd>" +
+        "<dd>Inwoners: " + feature.properties['inwoners'].toLocaleString() + "</dd>" +
+        "<dd>Landoppervlak: " + feature.properties['land_oppervlak'].toLocaleString() + " km²</dd>" +
+        "<dd>Bevolkinsdichtheid: " + feature.properties['bevolkinsdichtheid'].toLocaleString() + " per km²</dd>" +
+        "<dd>Totaal besmettingen: " + gemeente_obj['count'].toLocaleString() + "</dd>" +
+        "<dd>Nieuwe besmettingen: " + gemeente_obj['increase'].toLocaleString() + "</dd>" +
+        "<dd>Besmettingspercentage: " + (gemeente_obj["count"] * 100 / gemeente_props["inwoners"]).toLocaleString() + "</dd>" +
+        "<dd>Besmettingen per km²: " + (gemeente_obj["count"] / gemeente_props["land_oppervlak"]).toLocaleString() + "</dd>" +
         "</dl>";
     layer.bindTooltip(details);
 

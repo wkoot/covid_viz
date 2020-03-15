@@ -17,34 +17,84 @@ var lineStyle = {
     "opacity": 0.3
 };
 
-function getPctColorValue(gemeente_obj) {
-    var value = (gemeente_obj["COVID 13-03"] / gemeente_obj["Inwonertal"]) * 18000;
+var defaultFillOpacity = 0.3;
+
+function getPctColorStyle(gemeente_obj, gemeente_props) {
+    var value = (gemeente_obj["count"] / gemeente_props["inwoners"]) * 18000;
+    var colorValue;
 
     if (value === undefined || value === "" || value < 0.5)
-        return "#fef0d9";
-    if (value < 1)
-        return "#fdd49e";
-    if (value < 2)
-        return "#fdbb84";
-    if (value < 5)
-        return "#fc8d59";
-    if (value < 10)
-        return "#e34a33";
-    return "#b30000";
+        colorValue = "#f5faeb";
+    else if (value < 1)
+        colorValue = "#cbd5cf";
+    else if (value < 2)
+        colorValue = "#a1b1b4";
+    else if (value < 5)
+        colorValue = "#768c98";
+    else if (value < 10)
+        colorValue = "#4c687d";
+    else
+        colorValue = "#224361";
+
+    return {"fillColor": colorValue, "fillOpacity": defaultFillOpacity};
 }
 
-function getAbsColorValue(gemeente_obj) {
-    var value = gemeente_obj["COVID 13-03"];
+function getAbsColorStyle(gemeente_obj) {
+    var value = gemeente_obj["count"];
+    var colorValue;
 
     if (value === undefined || value === "" || value < 2)
-        return "#fef0d9";
-    if (value < 4)
-        return "#fdd49e";
-    if (value < 7)
-        return "#fdbb84";
-    if (value < 12)
-        return "#fc8d59";
-    if (value < 25)
-        return "#e34a33";
-    return "#b30000";
+        colorValue = "#f5faeb";
+    else if (value < 4)
+        colorValue = "#cbd5cf";
+    else if (value < 7)
+        colorValue = "#a1b1b4";
+    else if (value < 12)
+        colorValue = "#768c98";
+    else if (value < 25)
+        colorValue = "#4c687d";
+    else
+        colorValue = "#224361";
+
+    return {"fillColor": colorValue, "fillOpacity": defaultFillOpacity};
+}
+
+function getNewColorStyle(gemeente_obj) {
+    var value = gemeente_obj["increase"];
+    var colorValue;
+
+    if (value === undefined || value === "" || value < 1)
+        colorValue = "#f5faeb";
+    else if (value < 2)
+        colorValue = "#cbd5cf";
+    else if (value < 4)
+        colorValue = "#a1b1b4";
+    else if (value < 7)
+        colorValue = "#768c98";
+    else if (value < 10)
+        colorValue = "#4c687d";
+    else
+        colorValue = "#224361";
+
+    return {"fillColor": colorValue, "fillOpacity": defaultFillOpacity};
+}
+
+function getDensColorStyle(gemeente_obj, gemeente_props) {
+    var value = (gemeente_obj["count"] / gemeente_props["land_oppervlak"]) * 40;
+    var colorValue;
+
+    if (value === undefined || value === "" || value < 1)
+        colorValue = "#f5faeb";
+    else if (value < 2)
+        colorValue = "#cbd5cf";
+    else if (value < 4)
+        colorValue = "#a1b1b4";
+    else if (value < 7)
+        colorValue = "#768c98";
+    else if (value < 10)
+        colorValue = "#4c687d";
+    else
+        colorValue = "#224361";
+
+    return {"fillColor": colorValue, "fillOpacity": defaultFillOpacity};
 }
